@@ -3,23 +3,34 @@ import viteLogo from "./assets/vite.svg";
 import heroImg from "./assets/hero.png";
 import "./App.css";
 
+
+
 import { getDatabase, ref, set } from "firebase/database";
 
 //instace of firease app
 import { app } from "./FireBase";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
+import { getAuth, onAuthStateChanged  , signOut} from "firebase/auth"
+
+
+
+
 
 const db = getDatabase(app); //this is retrn instace of database
 
-
+//auth instance
+const auth = getAuth(app);
 
 function App() {
+
   const [user, setUser] = useState({
     id: null,
     name: null,
   });
+
+  const[currestUser , setCurrentUser] = useState(null);
 
 
   function setUserData(obj){
@@ -30,6 +41,8 @@ function App() {
       return {...prev , [obj.target.name] : obj.target.value}
     });
   };
+
+
 
 
 
@@ -46,6 +59,26 @@ function App() {
     });
 
   };
+
+
+  //check user is login or not
+  useEffect(()=>{
+  onAuthStateChanged(auth , user =>{
+    if (user) {
+      //yes user is logined
+      console.log("user is logined :" , user);
+      setCurrentUser(user);
+    }else{
+      //user => nulll
+      //so user is not logined out
+      console.log("user is not login :" , user);
+      setCurrentUser(null);
+    }
+  })
+  },[]);
+
+
+
 
 
 
@@ -76,11 +109,22 @@ function App() {
       <section id="spacer">
         <h1> Firebase React Authentication</h1>
 
-        <Signup/>
-
+        {
+          !currestUser ? <>
+          <Signup/>
         <hr />
-
         <Signin/>
+          </> : <>
+          <br/>
+            <h2>hello {currestUser?.displayName || "sir"}</h2>
+             
+             <h3>Email : {currestUser.email}</h3>
+
+
+             <button onClick={()=> signOut(auth)}>LogOut</button>
+
+          </>
+        }
 
       </section>
     </>
