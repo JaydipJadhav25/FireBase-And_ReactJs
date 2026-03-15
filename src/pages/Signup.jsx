@@ -3,13 +3,20 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { app } from "../FireBase";
 import "./Signup.css";
 
+import { GoogleAuthProvider , signInWithPopup } from "firebase/auth";
+
 const auth = getAuth(app);
+
+//instace of google provider
+const provider = new GoogleAuthProvider();
+
 
 function Signup() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const[loading , setLoading] = useState(false);
 
   const signUpUser = async (e) => {
     e.preventDefault();
@@ -28,6 +35,23 @@ function Signup() {
       setMessage(error.message);
     }
   };
+
+  const signUpWithGoogle = async () =>{
+    try {
+
+      setLoading(true);
+     const result =  await signInWithPopup(auth ,provider);
+     console.log("result : " , result);
+
+    } catch (error) {
+      setMessage(error.message);
+      
+    }finally{
+      setLoading(false);
+    }
+  }
+  
+
 
   return (
     <div className="signup-container">
@@ -50,10 +74,18 @@ function Signup() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-
         <button type="submit">Sign Up</button>
+        <button onClick={()=>{
+          signUpWithGoogle();
+        }}>{
+          loading ? "loading..." : "SignUp With Google"
+        }</button>
 
-        {message && <p className="message">{message}</p>}
+
+        {message  && <p className="message">{message}</p>}
+        
+
+
       </form>
 
     </div>
