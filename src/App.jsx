@@ -7,20 +7,44 @@ import { getDatabase, ref, set } from "firebase/database";
 
 //instace of firease app
 import { app } from "./FireBase";
+import { useState } from "react";
 
 const db = getDatabase(app); //this is retrn instace of database
 
 function App() {
+  const [user, setUser] = useState({
+    id: null,
+    name: null,
+  });
+
+
+  function setUserData(obj){
+    //set state val
+    console.log("log : " , obj);
+
+    setUser(prev => {
+      return {...prev , [obj.target.name] : obj.target.value}
+    });
+  };
+
 
 
   //function
   const putData = () => {
-    set(ref(db, "user/jaydip"), {
-      id: 1,
-      name: "jaydip",
-      age: 22,
+      
+    //check condition name is not null
+    if(user.name == null) alert("All data requried !");
+
+    console.log("user : " , user);
+
+    set(ref(db, `user/${user.name}`), {
+     ...user
     });
+
   };
+
+
+
 
   return (
     <>
@@ -32,14 +56,19 @@ function App() {
         </div>
 
         <h1>FireBase And Reactjs</h1>
+         <label htmlFor="">Id : </label>
+        <input type="number" name="id" onChange={e => setUserData(e)}/>
+        <label htmlFor="">Name : </label>
+        <input type="text" name="name"  onChange={e => setUserData(e)}/>
 
-        <button
-          onClick={() => {
-            putData();
-          }}
-        >
-          Put Date
-        </button>
+
+        <button onClick={()=>{
+          putData();
+        }}>create</button>
+        
+
+
+       
       </section>
 
       <div className="ticks"></div>
