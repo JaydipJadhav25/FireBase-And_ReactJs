@@ -8,8 +8,12 @@ import { getDatabase, ref, set } from "firebase/database";
 //instace of firease app
 import { app } from "./FireBase";
 import { useState } from "react";
+import Signup from "./pages/Signup";
+import Signin from "./pages/Signin";
 
 const db = getDatabase(app); //this is retrn instace of database
+
+
 
 function App() {
   const [user, setUser] = useState({
@@ -66,13 +70,19 @@ function App() {
           putData();
         }}>create</button>
         
-
-
-       
       </section>
 
       <div className="ticks"></div>
-      {/* <section id="spacer"></section> */}
+      <section id="spacer">
+        <h1> Firebase React Authentication</h1>
+
+        <Signup/>
+
+        <hr />
+
+        <Signin/>
+
+      </section>
     </>
   );
 }
