@@ -12,6 +12,7 @@ import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { getMessaging, getToken } from "firebase/messaging";
+import axios from "axios";
 
 const db = getDatabase(app); //this is retrn instace of database
 
@@ -51,7 +52,7 @@ function App() {
   };
 
   //to get access of web notifications
-  function requestPermission() {
+  async function requestPermission() {
     console.log("Requesting permission...");
     Notification.requestPermission().then((permission) => {
       if (permission === "granted") {
@@ -59,9 +60,16 @@ function App() {
 
         //genrate token
         getToken( messagingInstaces , { vapidKey: "BIUpU9HkA4-SkMPHuiQUjQLmt7UT0q4PhAmHUt0xgmvmEeJS4YJkhZWP3xE3jPL96L9zhoQWvELbwUJyryGze4c" })
-          .then((currentToken) => {
+          .then(async(currentToken) => {
             if (currentToken) {
               console.log("user token : " , currentToken);
+             
+              //save in db user
+             const response = await axios.post("http://localhost:3000/save-token" , {token : currentToken});
+            //  const response = await axios.post("http://localhost:3000/save-token");
+             console.log("server reponse : " , response.data);
+
+
             } else {
               // Show permission request UI
               console.log(

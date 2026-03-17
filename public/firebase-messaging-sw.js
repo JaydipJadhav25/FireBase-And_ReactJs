@@ -4,7 +4,13 @@ importScripts(
 );
 
 const firebaseConfig = {
-
+  apiKey: "AIzaSyDRvkPQOy_DbhZIY5taiY9c8Cdd_xesgHM",
+  authDomain: "myfrist-app-59ce2.firebaseapp.com",
+  projectId: "myfrist-app-59ce2",
+  storageBucket: "myfrist-app-59ce2.firebasestorage.app",
+  messagingSenderId: "464783055452",
+  appId: "1:464783055452:web:88659e6532dfacb593a499",
+  databaseURL: "https://myfrist-app-59ce2-default-rtdb.firebaseio.com"
 };
 
 firebase.initializeApp(firebaseConfig);
